@@ -1,0 +1,57 @@
+name: Publish skills
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "skills/**"
+      - ".github/workflows/publish-skills.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-skills
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - name: Validate skill discovery
+        run: npx --yes skills@latest add . --list
+
+  publish:
+    needs: validate
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - skill: execute-linear-epic
+            agent: "*"
+          - skill: execute-linear-epic-with-codex
+            agent: claude-code
+    steps:
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - name: Publish skill
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/skills-publish"
+          cd "$RUNNER_TEMP/skills-publish"
+          npx --yes skills@latest add ayronforge/skills \
+            --skill "${{ matrix.skill }}" \
+            --agent "${{ matrix.agent }}" \
+            --copy \
+            --yes

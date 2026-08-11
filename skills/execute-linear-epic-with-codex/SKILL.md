@@ -57,7 +57,7 @@ On every poll:
 3. Reproduce every actionable claim against the current diff before changing code, including bot feedback.
 4. Apply these decision rules in order:
    - A thumbs-up reaction on the PR description or a thumbs-up comment is a merge condition: ask the user for permission and keep polling while awaiting the answer.
-   - Valid findings are fixed through Codex in the same worktree, pushed, answered, and followed by another polling round.
+   - Valid findings are fixed through Codex in the same worktree, pushed, answered, resolved, and followed by another polling round.
    - If most new comments in a round are proven invalid, out of scope, or harmful, the review has degenerated: ask the user for permission to merge and explain why each dismissed comment was inadequate. Do not keep implementing bad feedback.
    - With no new comments, schedule another poll after 20-30 minutes. Silence never ends the loop.
 5. Never merge without a fresh, explicit user confirmation for that PR. A merge condition only triggers the request for permission.
