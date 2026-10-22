@@ -39,6 +39,12 @@ jobs:
             agent: "*"
           - skill: execute-linear-epic-with-codex
             agent: claude-code
+          - skill: pr-review
+            agent: "*"
+          - skill: testing
+            agent: "*"
+          - skill: declutter-ui
+            agent: "*"
     steps:
       - uses: actions/setup-node@v7
         with:
